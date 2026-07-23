@@ -55,9 +55,8 @@ export const AUDIO_MANIFEST = Object.freeze({
   // Camada de corte
   rev_limiter: 'audio/rev_limiter.ogg',
 
-  // Camadas de acelerador
-  throttle_on: 'audio/throttle_on.ogg',
-  throttle_off: 'audio/throttle_off.ogg',
+  // (throttle_on/off ficam fora do manifesto: a camada de acelerador é
+  //  desligada no original, então não precisam ser baixados.)
 
   // Eventos de câmbio
   gear_up: 'audio/gear_up.ogg',

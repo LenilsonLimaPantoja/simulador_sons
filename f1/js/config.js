@@ -74,7 +74,6 @@ export const CONFIG = {
         display:         'display.ogg',
         fuel_pump_prime: 'fuel_pump_prime.ogg',
         ignition_on:     'ignition_on.ogg',
-        starter:         'starter.ogg',
         engine_shutdown: 'engine_shutdown.ogg',
         rpm_idle:  'idle.ogg',
         rpm_6000:  'rpm_6000.ogg',
