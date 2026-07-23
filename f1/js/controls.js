@@ -67,18 +67,17 @@ export class Controls {
         window.addEventListener('keydown', (e) => {
             if (e.repeat) return;
             switch (e.code) {
-                case 'KeyW': case 'ArrowUp':    e.preventDefault(); this._gas(true);   break;
-                case 'KeyS': case 'ArrowDown':  e.preventDefault(); this._brake(true); break;
-                case 'KeyD': case 'ArrowRight': this.cb.onShiftUp();   break;
-                case 'KeyA': case 'ArrowLeft':  this.cb.onShiftDown(); break;
-                case 'KeyM': this.cb.onToggleAuto();  break;
-                case 'KeyP': this.cb.onTogglePower(); break;
-                case 'Enter': this.cb.onToggleEngine(); break;
+                case 'ArrowUp':    e.preventDefault(); this._gas(true);   break;
+                case 'ArrowDown':  e.preventDefault(); this._brake(true); break;
+                case 'ArrowRight': e.preventDefault(); this.cb.onShiftUp();   break;
+                case 'ArrowLeft':  e.preventDefault(); this.cb.onShiftDown(); break;
+                case 'KeyK': e.preventDefault(); this.cb.onToggleEngine(); break;
+                case 'KeyT': e.preventDefault(); this.cb.onToggleAuto();   break;
             }
         });
         window.addEventListener('keyup', (e) => {
-            if (e.code === 'KeyW' || e.code === 'ArrowUp')   this._gas(false);
-            else if (e.code === 'KeyS' || e.code === 'ArrowDown') this._brake(false);
+            if (e.code === 'ArrowUp')        this._gas(false);
+            else if (e.code === 'ArrowDown') this._brake(false);
         });
     }
 

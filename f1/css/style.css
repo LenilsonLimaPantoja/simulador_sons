@@ -94,7 +94,7 @@ body {
        meio). Fixa na viewport para cobrir de forma estável. */
     background:
         linear-gradient(180deg, rgba(5,7,12,.88) 0%, rgba(5,7,12,.78) 45%, rgba(5,7,12,.92) 100%),
-        var(--veh-bg, none) center center / cover no-repeat fixed;
+        url('../img/f1.png') center center / cover no-repeat fixed;
     background-color: var(--bg);
     min-height: 100vh;
     display: flex;
@@ -375,11 +375,18 @@ body {
 
 /* ------------------------------------------------------------------ Hint -- */
 .hint {
+    display: none;               /* só no PC (ver media query abaixo) */
     text-align: center;
     color: var(--muted);
     font-size: 12px;
-    line-height: 1.7;
+    line-height: 1.8;
     margin-top: 4px;
+}
+.hint strong { color: var(--accent); }
+
+/* Mostra a dica de teclado só em dispositivos com mouse (desktop). */
+@media (hover: hover) and (pointer: fine) {
+    .hint { display: block; }
 }
 kbd {
     background: var(--panel-2);

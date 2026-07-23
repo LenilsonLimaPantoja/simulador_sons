@@ -1,0 +1,593 @@
+/*
+ * style.css — GT3 Screamer
+ * -----------------------------------------------------------------------------
+ * Visual e responsividade do simulador. Mobile-first:
+ *   - Preenche a tela do celular usando 100dvh (lida com a barra do navegador).
+ *   - Controles ancorados na base (zona do polegar); painel no topo.
+ *   - Respeita notch/safe-areas (env(safe-area-inset-*)).
+ *   - Tipografia e espaçamentos escalam com clamp().
+ *   - Modo paisagem ergonômico (freio à esquerda, acelerador à direita).
+ *
+ * Os nomes de classe são compartilhados com dashboard.js / index.html — mantê-los
+ * é o que preserva a integração; aqui só evoluímos o estilo.
+ * -----------------------------------------------------------------------------
+ */
+
+:root {
+  --bg: #080a0e;
+  --bg-2: #0d1017;
+  --panel: #12161d;
+  --panel-2: #0c0f14;
+  --line: #1e2530;
+  --line-2: #2a3340;
+
+  --accent: #ff2d2d;
+  --accent-2: #ff7a3d;
+  --accent-dim: #7a1414;
+  --ok: #35d07f;
+  --warn: #ffd23d;
+
+  --text: #eef2f7;
+  --text-dim: #8b94a3;
+
+  --glass: rgba(255, 255, 255, 0.04);
+  --radius: 16px;
+  --radius-lg: 22px;
+
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Consolas', 'SF Mono', ui-monospace, monospace;
+
+  /* Insets de área segura (notch); 0 quando não aplicável. */
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  min-height: 100%;
+  /* Foto de fundo (GT3) sob um véu escuro. Fica no elemento raiz para cobrir a
+     viewport de forma estável (não escorrega ao rolar, sem o bug do
+     background-attachment:fixed no iOS). Mais escuro no topo/base (onde estão o
+     cabeçalho e os controles) e mais claro no meio (onde aparece o carro). */
+  background:
+    linear-gradient(180deg, rgba(6, 8, 11, 0.9) 0%, rgba(6, 8, 11, 0.82) 42%, rgba(6, 8, 11, 0.92) 100%),
+    url('../img/gt3.jpeg') center center / cover no-repeat;
+  background-color: var(--bg);
+}
+
+body {
+  min-height: 100dvh;
+  font-family: var(--font);
+  color: var(--text);
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ===========================================================================
+   Cabeçalho: identidade + chave DISPLAY
+   =========================================================================== */
+
+.topbar {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.topbar__logo {
+  height: clamp(38px, 11vw, 64px);
+  width: auto;
+  max-width: 62%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Chave (toggle) estilo interruptor */
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.switch__label {
+  font-size: clamp(10px, 2.6vw, 12px);
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  transition: color 0.15s ease;
+}
+
+.switch__track {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  border: 1px solid var(--line-2);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.switch__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #6b7280;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.switch.is-on .switch__label {
+  color: var(--text);
+}
+
+.switch.is-on .switch__track {
+  background: rgba(53, 208, 127, 0.22);
+  border-color: var(--ok);
+}
+
+.switch.is-on .switch__knob {
+  transform: translateX(22px);
+  background: var(--ok);
+}
+
+/* ===========================================================================
+   Palco principal — layout que preenche a tela (mobile-first)
+   =========================================================================== */
+
+.stage {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding:
+    calc(18px + var(--safe-t))
+    calc(16px + var(--safe-r))
+    calc(24px + var(--safe-b))
+    calc(16px + var(--safe-l));
+}
+
+.stage[hidden] {
+  display: none;
+}
+
+/* margin: auto 0 -> centraliza verticalmente com folga quando há espaço; ao
+   faltar espaço, as margens colapsam e o conteúdo rola (sem cortar o topo). */
+.stage__inner {
+  width: 100%;
+  max-width: 760px;
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(14px, 3vh, 26px);
+}
+
+.dash {
+  width: 100%;
+}
+
+.pad {
+  width: 100%;
+}
+
+.stage__hint {
+  display: none; /* dica de teclado só no desktop (ver media query) */
+  max-width: 640px;
+  text-align: center;
+  line-height: 1.8;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.stage__hint strong {
+  color: var(--accent-2);
+}
+
+/* ===========================================================================
+   Painel digital — tacômetro de arco (dashboard.js)
+   =========================================================================== */
+
+.dash {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 2vh, 16px);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Tacômetro: arco SVG com conteúdo central sobreposto */
+.gauge {
+  position: relative;
+  width: clamp(240px, 80vw, 360px);
+  aspect-ratio: 1 / 1;
+}
+
+.gauge__svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.gauge__track {
+  stroke: #1a212c;
+}
+
+.gauge__redzone {
+  stroke: rgba(255, 45, 45, 0.28);
+}
+
+.gauge__progress {
+  --rev: var(--ok);
+  stroke: var(--rev);
+  transition: stroke 0.18s linear, opacity 0.25s ease;
+}
+
+/* Conteúdo central (acima do centro, na "boca" do arco — deixa espaço para a
+   linha de baixo com RPM e marcha). */
+.gauge__center {
+  position: absolute;
+  inset: 0 0 26% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  pointer-events: none;
+}
+
+/* Velocidade em destaque no centro */
+.gauge__speed-big {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  line-height: 0.9;
+  font-size: clamp(52px, 19vw, 88px);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.gauge__unit {
+  margin-top: 4px;
+  font-size: clamp(11px, 2.8vw, 13px);
+  letter-spacing: 3px;
+  color: var(--text-dim);
+}
+
+/* RPM no canto inferior esquerdo, alinhado com a marcha. */
+.gauge__rpm {
+  position: absolute;
+  top: 63%;
+  left: 26%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;      /* número em cima, "RPM" embaixo (como no F1) */
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.gauge__rpm span {
+  font-size: clamp(14px, 4vw, 19px);
+  font-weight: 800;
+  color: var(--text);
+  min-width: 5ch;                     /* largura fixa: o número não "empurra" o RPM */
+  text-align: center;
+  font-variant-numeric: tabular-nums; /* dígitos de largura uniforme */
+}
+
+.gauge__rpm em {
+  font-style: normal;
+  font-size: clamp(9px, 2.4vw, 11px);
+  letter-spacing: 1px;
+  color: var(--text-dim);
+}
+
+/* Marcha: só o número (sem caixa/rótulo), embaixo à direita, dentro do arco. */
+.gauge__gearbox {
+  position: absolute;
+  top: 63%;
+  right: 26%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.gauge__gear {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  line-height: 1;
+  font-size: clamp(30px, 9vw, 42px);
+  color: #22d3ee;
+  transition: color 0.15s ease;
+}
+
+/* Estados */
+.gauge.is-redline .gauge__gear {
+  color: var(--accent);
+}
+
+.gauge.is-limiter .gauge__progress {
+  animation: gauge-pulse 0.1s steps(2, jump-none) infinite;
+}
+
+@keyframes gauge-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Telltales (base) */
+.gauge__status {
+  display: flex;
+  gap: clamp(6px, 1.6vw, 9px);
+}
+
+.pill {
+  font-size: clamp(9px, 2.4vw, 11px);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  padding: 5px 11px;
+  border-radius: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  opacity: 0.55;
+  transition: all 0.12s ease;
+}
+
+/* Ativo: só o TEXTO (e a borda) muda de cor — sem preencher o botão. */
+.pill.is-on {
+  opacity: 1;
+}
+
+#dash-abs.is-on {
+  color: var(--accent-2);
+  border-color: var(--accent-2);
+}
+
+#dash-tc.is-on {
+  color: var(--warn);
+  border-color: var(--warn);
+}
+
+#dash-lmt.is-on {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+#dash-rev.is-on {
+  color: var(--warn);
+  border-color: var(--warn);
+}
+
+/* ===========================================================================
+   Painel de controle na tela (toque / mouse)
+   =========================================================================== */
+
+/* Console: agrupa os controles num painel discreto (organização visual). */
+.pad {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2.4vw, 13px);
+  padding: clamp(11px, 2.8vw, 15px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent), rgba(12, 15, 20, 0.55);
+  border: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.pad__row {
+  display: flex;
+  gap: clamp(10px, 2.4vw, 13px);
+}
+
+.pad__row--main {
+  align-items: stretch;
+}
+
+.pad__gears {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2.4vw, 13px);
+  flex: 0 0 auto;
+}
+
+/* Base de todos os botões: alvos grandes, sem seleção/zoom. */
+.btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--glass), transparent), var(--panel);
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.05s ease, background 0.12s ease, border-color 0.12s ease,
+    filter 0.12s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+  filter: brightness(1.08);
+}
+
+/* Botões utilitários (motor / auto) — largura total, estilo segmentado. */
+.btn--util {
+  flex: 1 1 0;
+  padding: clamp(11px, 2.8vw, 15px) 14px;
+  font-size: clamp(12px, 3vw, 14px);
+}
+
+/* Pedais grandes (freio / acelerador) */
+.btn--pedal {
+  flex: 1 1 0;
+  min-height: clamp(92px, 23vw, 124px);
+  font-size: clamp(15px, 4vw, 19px);
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+}
+
+.btn--gas {
+  background: linear-gradient(180deg, rgba(53, 208, 127, 0.18), rgba(53, 208, 127, 0.03)), var(--panel);
+  border-color: rgba(53, 208, 127, 0.4);
+  color: #d7f7e6;
+}
+
+.btn--brake {
+  background: linear-gradient(180deg, rgba(255, 45, 45, 0.18), rgba(255, 45, 45, 0.03)), var(--panel);
+  border-color: rgba(255, 45, 45, 0.4);
+  color: #ffdcdc;
+}
+
+/* Setas de marcha: ícone + legenda */
+.btn--gear {
+  width: clamp(72px, 20vw, 100px);
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.btn--gear__ico {
+  font-size: clamp(20px, 5.5vw, 26px);
+  line-height: 1;
+}
+
+.btn--gear__cap {
+  font-size: clamp(8px, 2.2vw, 10px);
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+}
+
+/* Estados acesos (pressionado / ligado) */
+.btn--gas.is-active {
+  background: linear-gradient(180deg, var(--ok), #1f8a55);
+  border-color: var(--ok);
+  color: #04140c;
+}
+
+.btn--brake.is-active {
+  background: linear-gradient(180deg, var(--accent), var(--accent-dim));
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn--util.is-active {
+  background: linear-gradient(180deg, var(--ok), #1f8a55);
+  border-color: var(--ok);
+  color: #04140c;
+}
+
+.btn--gear:active .btn--gear__cap {
+  color: inherit;
+}
+
+/* ===========================================================================
+   Responsividade
+   =========================================================================== */
+
+/* Desktop / telas largas: um pouco mais de respiro entre painel e controles. */
+@media (min-width: 760px) {
+  .stage__inner {
+    gap: 26px;
+  }
+}
+
+/* Dica de teclado só em dispositivos com mouse/teclado (computador) — nunca em
+   telas de toque, mesmo em paisagem larga. */
+@media (hover: hover) and (pointer: fine) {
+  .stage__hint {
+    display: block;
+  }
+}
+
+/* Celular em paisagem (baixo e largo): compacta o painel para caber tudo. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .stage__inner {
+    max-width: 900px;
+    gap: 8px;
+  }
+  .gauge {
+    width: clamp(170px, 46vh, 300px);
+  }
+  .gauge__gear {
+    font-size: clamp(46px, 20vh, 88px);
+  }
+  .btn--pedal {
+    min-height: clamp(60px, 24vh, 104px);
+  }
+  .gauge__status .pill {
+    padding: 4px 9px;
+  }
+}
+
+/* ===========================================================================
+   Estados de energia: chave DISPLAY apagada e pad travado
+   =========================================================================== */
+
+.gauge__center,
+.gauge__rpm,
+.gauge__gearbox,
+.gauge__redzone,
+.gauge__status {
+  transition: opacity 0.25s ease;
+}
+
+/* Painel apagado: some o conteúdo, deixando só o trilho tênue (tela "off"). */
+.dash.is-off .gauge__center,
+.dash.is-off .gauge__rpm,
+.dash.is-off .gauge__gearbox,
+.dash.is-off .gauge__progress {
+  opacity: 0;
+}
+
+.dash.is-off .gauge__redzone {
+  opacity: 0.22;
+}
+
+.dash.is-off .gauge__status {
+  opacity: 0.18;
+}
+
+/* Controles travados até a chave DISPLAY ligar o sistema. */
+.pad.is-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  filter: grayscale(0.5);
+}
+
+/* Botões de dirigir travados até o motor ligar (freio/marchas/acelerador). */
+.btn.is-locked {
+  opacity: 0.4;
+  pointer-events: none;
+  filter: grayscale(0.5);
+}

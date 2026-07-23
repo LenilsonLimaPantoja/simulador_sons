@@ -33,36 +33,36 @@ import { clamp, equalPowerCrossfade, delay } from './utils.js';
  */
 export const AUDIO_MANIFEST = Object.freeze({
   // Interface
-  display: 'audio/display.wav', // clique da chave que liga o painel
-  fuel_pump: 'audio/fuel_pump.wav', // escorva da bomba de combustível (na inicialização)
+  display: 'audio/display.ogg', // clique da chave que liga o painel
+  fuel_pump: 'audio/fuel_pump.ogg', // escorva da bomba de combustível (na inicialização)
 
   // Eventos de ciclo de vida do motor
-  starter: 'audio/starter.wav',
-  engine_off: 'audio/engine_off.wav',
-  idle: 'audio/idle.wav',
+  starter: 'audio/starter.ogg',
+  engine_off: 'audio/engine_off.ogg',
+  idle: 'audio/idle.ogg',
 
   // Camadas de RPM (loops contínuos)
-  rpm_1500: 'audio/rpm_1500.wav',
-  rpm_2500: 'audio/rpm_2500.wav',
-  rpm_3500: 'audio/rpm_3500.wav',
-  rpm_4500: 'audio/rpm_4500.wav',
-  rpm_5500: 'audio/rpm_5500.wav',
-  rpm_6500: 'audio/rpm_6500.wav',
-  rpm_7500: 'audio/rpm_7500.wav',
-  rpm_8200: 'audio/rpm_8200.wav',
-  rpm_8500: 'audio/rpm_8500.wav',
+  rpm_1500: 'audio/rpm_1500.ogg',
+  rpm_2500: 'audio/rpm_2500.ogg',
+  rpm_3500: 'audio/rpm_3500.ogg',
+  rpm_4500: 'audio/rpm_4500.ogg',
+  rpm_5500: 'audio/rpm_5500.ogg',
+  rpm_6500: 'audio/rpm_6500.ogg',
+  rpm_7500: 'audio/rpm_7500.ogg',
+  rpm_8200: 'audio/rpm_8200.ogg',
+  rpm_8500: 'audio/rpm_8500.ogg',
 
   // Camada de corte
-  rev_limiter: 'audio/rev_limiter.wav',
+  rev_limiter: 'audio/rev_limiter.ogg',
 
   // Camadas de acelerador
-  throttle_on: 'audio/throttle_on.wav',
-  throttle_off: 'audio/throttle_off.wav',
+  throttle_on: 'audio/throttle_on.ogg',
+  throttle_off: 'audio/throttle_off.ogg',
 
   // Eventos de câmbio
-  gear_up: 'audio/gear_up.wav',
-  gear_down_even: 'audio/gear_down_even.wav',
-  gear_down_odd: 'audio/gear_down_odd.wav',
+  gear_up: 'audio/gear_up.ogg',
+  gear_down_even: 'audio/gear_down_even.ogg',
+  gear_down_odd: 'audio/gear_down_odd.ogg',
 });
 
 export class AudioEngine {

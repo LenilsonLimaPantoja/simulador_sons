@@ -79,7 +79,7 @@ class App {
     }
 
     _applyVehicleVisual() {
-        document.body.style.setProperty('--veh-bg', `url('${CONFIG.ui.background}')`);
+        // O fundo é fixado no CSS (../img/f1.png). Aqui só o logo.
         if (this.el.logo) { this.el.logo.src = CONFIG.ui.logo; this.el.logo.alt = CONFIG.name; }
     }
 
