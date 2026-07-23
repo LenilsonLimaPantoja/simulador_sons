@@ -1,0 +1,76 @@
+/* launcher.css — tela inicial de escolha do carro */
+
+:root {
+    --bg:      #05070c;
+    --panel:   #12161d;
+    --line:    #2a3340;
+    --text:    #eef2f7;
+    --muted:   #8b94a3;
+    --accent:  #00e0ff;
+    --font:    "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background:
+        radial-gradient(1200px 600px at 50% -10%, #12203a 0%, transparent 60%),
+        var(--bg);
+}
+
+.launcher {
+    width: 100%;
+    max-width: 760px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 34px;
+}
+.launcher__title {
+    font-size: clamp(20px, 5vw, 32px);
+    font-weight: 800;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+}
+.launcher__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 22px;
+    width: 100%;
+}
+
+.car {
+    flex: 1 1 240px;
+    max-width: 320px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 30px 22px;
+    text-decoration: none;
+    color: var(--text);
+    background: linear-gradient(180deg, rgba(255,255,255,.04), transparent), rgba(12,15,20,.7);
+    border: 1px solid var(--line);
+    transition: transform .08s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.car:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 28px rgba(0,224,255,.18);
+    transform: translateY(-3px);
+}
+.car:active { transform: translateY(0); }
+.car__logo {
+    height: clamp(84px, 20vw, 120px);
+    max-width: 85%;
+    object-fit: contain;
+}

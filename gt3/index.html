@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>GT3 Sounds</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Palco principal do simulador (visível desde o início). -->
+  <main id="stage" class="stage">
+    <div class="stage__inner">
+      <!-- Cabeçalho: identidade + chave DISPLAY que liga o painel. -->
+      <header class="topbar">
+        <img class="topbar__logo" src="img/logo.png" alt="GT3 Screamer" />
+        <button id="display-switch" class="switch" type="button" aria-pressed="false"
+                aria-label="Ligar display">
+          <span class="switch__label">DISPLAY</span>
+          <span class="switch__track"><span class="switch__knob"></span></span>
+        </button>
+      </header>
+
+      <!-- O painel digital é montado aqui por dashboard.js (começa apagado). -->
+      <div id="dashboard"></div>
+
+      <!-- Painel de controle na tela (toque/mouse). O teclado também funciona.
+           Fica desabilitado até a chave DISPLAY ligar o sistema. -->
+      <div class="pad is-disabled" id="pad">
+        <!-- Linha superior: ações discretas -->
+        <div class="pad__row pad__row--top">
+          <button id="ign-button" type="button" class="btn btn--util">MOTOR</button>
+          <button id="auto-button" type="button" class="btn btn--util is-active">AUTO: ON</button>
+        </div>
+
+        <!-- Linha principal: freio | marchas | acelerador -->
+        <div class="pad__row pad__row--main">
+          <button id="brake-button" type="button" class="btn btn--pedal btn--brake">FREIO</button>
+
+          <div class="pad__gears">
+            <button id="gearup-button" type="button" class="btn btn--gear">
+              <span class="btn--gear__ico">▲</span><span class="btn--gear__cap">SOBE</span>
+            </button>
+            <button id="geardown-button" type="button" class="btn btn--gear">
+              <span class="btn--gear__ico">▼</span><span class="btn--gear__cap">DESCE</span>
+            </button>
+          </div>
+
+          <button id="throttle-button" type="button" class="btn btn--pedal btn--gas">ACELERAR</button>
+        </div>
+      </div>
+
+      <p class="stage__hint" id="controls-hint">
+        Teclado: <strong style="color:var(--accent)">↑</strong> acelerar ·
+        <strong style="color:var(--accent)">↓</strong> freio ·
+        <strong style="color:var(--accent)">→ ←</strong> marchas ·
+        <strong style="color:var(--accent)">K</strong> liga/desliga ·
+        <strong style="color:var(--accent)">T</strong> auto
+      </p>
+    </div>
+  </main>
+
+  <!-- Ponto de entrada. type="module" habilita ES6 Modules. -->
+  <script type="module" src="main.js"></script>
+</body>
+</html>

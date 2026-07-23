@@ -1,0 +1,399 @@
+/* =============================================================================
+   style.css — Painel estilo Fórmula 1 (dark)
+   ========================================================================== */
+
+:root {
+    --bg:        #05070c;
+    --panel:     #0d111a;
+    --panel-2:   #131926;
+    --border:    #1e2637;
+    --line-2:    #2a3340;              /* borda dos botões (estilo gt3) */
+    --glass:     rgba(255,255,255,.04); /* véu de vidro dos botões */
+    --text:      #e6e9ef;
+    --muted:     #8a93a6;
+    --accent:    #ff2e3f;   /* vermelho F1 */
+    --accent-2:  #00e0ff;   /* ciano HUD */
+    --green:     #2ee66a;
+    --yellow:    #ffcc33;
+    --radius:    14px;
+    --font:      "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    --mono:      "Consolas", "SF Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ------------------------------------------------------- Seletor de carro -- */
+.selector {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+}
+.selector[hidden] { display: none; }
+.selector__title {
+    font-size: clamp(20px, 5vw, 30px);
+    font-weight: 800;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--text);
+}
+.selector__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+.vehicle-card {
+    flex: 1 1 220px;
+    max-width: 300px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 28px 20px;
+    background: linear-gradient(180deg, var(--glass), transparent), rgba(12,15,20,.7);
+    border: 1px solid var(--line-2);
+    color: var(--text);
+    cursor: pointer;
+    transition: transform .08s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.vehicle-card:hover {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 26px rgba(0,224,255,.18);
+    transform: translateY(-2px);
+}
+.vehicle-card:active { transform: translateY(0); }
+.vehicle-card__logo {
+    height: 64px;
+    max-width: 78%;
+    object-fit: contain;
+}
+.vehicle-card__name {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+.vehicle-card__tag {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+#app[hidden] { display: none; }
+
+body {
+    font-family: var(--font);
+    color: var(--text);
+    /* Foto de fundo sob um véu escuro (mais escuro no topo/base, mais claro no
+       meio). Fixa na viewport para cobrir de forma estável. */
+    background:
+        linear-gradient(180deg, rgba(5,7,12,.88) 0%, rgba(5,7,12,.78) 45%, rgba(5,7,12,.92) 100%),
+        var(--veh-bg, none) center center / cover no-repeat fixed;
+    background-color: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+/* ------------------------------------------------------------- Dashboard -- */
+/* Sem "caixa": o painel fica transparente sobre a foto de fundo. */
+.dashboard {
+    width: 100%;
+    max-width: 640px;
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+}
+
+.dashboard__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.dashboard__logo {
+    height: clamp(40px, 11vw, 68px);
+    width: auto;
+    max-width: 62%;
+    object-fit: contain;
+    display: block;
+}
+
+/* ------------------------------------------------------ Chave DISPLAY ----- */
+/* Interruptor transparente (rótulo + toggle), estilo gt3 — sem pílula. */
+.switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+    padding: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: opacity .2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.switch:disabled { opacity: .35; cursor: not-allowed; }
+
+.switch__label {
+    font-size: clamp(10px, 2.6vw, 12px);
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--muted);
+    transition: color .15s ease;
+}
+.switch__track {
+    position: relative;
+    width: 48px; height: 26px;
+    border-radius: 999px;
+    background: var(--panel-2);
+    border: 1px solid var(--line-2);
+    transition: background .15s ease, border-color .15s ease;
+}
+.switch__thumb {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #6b7280;
+    transition: transform .15s ease, background .15s ease;
+}
+.switch[aria-pressed="true"] .switch__label { color: var(--text); }
+.switch[aria-pressed="true"] .switch__track {
+    background: rgba(46,230,106,.22);
+    border-color: var(--green);
+}
+.switch[aria-pressed="true"] .switch__thumb {
+    transform: translateX(22px);
+    background: var(--green);
+}
+
+/* Painel apagado: escurece cluster e controles, mas mantém a chave viva. */
+.dashboard--off .cluster,
+.dashboard--off .controls {
+    opacity: .3;
+    filter: grayscale(0.6);
+    transition: opacity .4s, filter .4s;
+    pointer-events: none;
+}
+
+/* Com a chave desligada, os dígitos (marcha, RPM, km/h) somem por completo. */
+.cluster__gear,
+.cluster__digits {
+    transition: opacity .3s ease;
+}
+.dashboard--off .cluster__gear,
+.dashboard--off .cluster__digits {
+    opacity: 0;
+}
+
+/* --------------------------------------------------------------- Cluster -- */
+.cluster {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 22px;
+}
+/* Área do mostrador: referência de posicionamento das camadas.
+   Proporção do velocímetro igual ao gt3 (clamp responsivo). */
+.cluster__gauge {
+    position: relative;
+    width: clamp(260px, 80vw, 380px);
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+}
+
+/* Camada de fundo (arcos/marcações/miolo). */
+.tach {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 0;
+}
+
+/* Camada do ponteiro: ACIMA dos números, sem capturar cliques. */
+.tach__needle {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Marcha no topo do velocímetro. */
+.cluster__gear {
+    position: absolute;
+    top: 33%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
+}
+
+/* RPM e KM/H embaixo do centro. */
+.cluster__digits {
+    position: absolute;
+    top: 66%;                 /* abaixo, longe da base do ponteiro */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 34px;
+    align-items: flex-end;
+    z-index: 1;               /* entre o fundo e o ponteiro */
+}
+.readout { text-align: center; min-width: 70px; }
+.readout__value {
+    display: block;
+    font-family: var(--mono);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text);
+}
+.readout__label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-top: 6px;
+}
+.readout--gear  .readout__value { font-size: 48px; color: var(--accent-2); }
+.readout--rpm   .readout__value { font-size: 27px; }
+.readout--speed .readout__value { font-size: 27px; }
+
+/* -------------------------------------------------------------- Controls -- */
+.controls { display: flex; flex-direction: column; gap: 16px; }
+.controls__row { display: flex; gap: 12px; }
+
+/* Véu de vidro sobre painel — base de todos os botões (estilo gt3). */
+.btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 10px;
+    border: 1px solid var(--line-2);
+    border-radius: 0;                 /* cantos retos, estilo painel */
+    background: linear-gradient(180deg, var(--glass), transparent), var(--panel);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 4px 12px rgba(0,0,0,.3);
+    transition: transform .05s ease, background .12s ease, border-color .12s ease,
+                filter .12s ease, opacity .2s ease;
+    -webkit-user-select: none; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.btn:active:not(:disabled) { transform: translateY(1px); filter: brightness(1.08); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Linha principal: pedais (esticam) + coluna de marchas (fixa). */
+.controls__row--main { align-items: stretch; }
+.controls__gears {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 0 0 auto;
+}
+
+/* Botões utilitários (MOTOR / AUTO) — segmentados, largura total. */
+.btn--util { flex: 1 1 0; padding: 15px 14px; font-size: 14px; }
+
+/* Estado "aceso" (motor ligado / auto on): verde sólido. */
+.btn--util.is-active {
+    background: linear-gradient(180deg, var(--green), #1f8a55), var(--panel);
+    border-color: var(--green);
+    color: #04140c;
+}
+
+/* Pedais grandes (FREIO / ACELERAR). */
+.btn--pedal {
+    flex: 1 1 0;
+    min-height: 118px;
+    font-size: 19px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+}
+.btn--gas {
+    background: linear-gradient(180deg, rgba(53,208,127,.18), rgba(53,208,127,.03)), var(--panel);
+    border-color: rgba(53,208,127,.4);
+    color: #d7f7e6;
+}
+.btn--gas.is-active {
+    background: linear-gradient(180deg, var(--green), #1f8a55), var(--panel);
+    border-color: var(--green);
+    color: #04140c;
+}
+.btn--brake {
+    background: linear-gradient(180deg, rgba(255,45,45,.18), rgba(255,45,45,.03)), var(--panel);
+    border-color: rgba(255,45,45,.4);
+    color: #ffdcdc;
+}
+.btn--brake.is-active {
+    background: linear-gradient(180deg, var(--accent), #7a1414), var(--panel);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+/* Setas de marcha: ícone + legenda empilhados. */
+.btn--gear {
+    width: 96px;
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: 3px;
+}
+.btn--gear__ico { font-size: 24px; line-height: 1; }
+.btn--gear__cap {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+}
+
+/* Botão MOTOR em modo "carregando" (bomba escorvando). */
+.btn--loading {
+    color: var(--yellow) !important;
+    animation: pulse 1s ease-in-out infinite;
+}
+@keyframes pulse { 50% { opacity: .5; } }
+
+/* ------------------------------------------------------------------ Hint -- */
+.hint {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 4px;
+}
+kbd {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1px 7px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text);
+}
+
+/* ---------------------------------------------------------- Responsivo --- */
+@media (max-width: 520px) {
+    .cluster__digits { gap: 16px; }
+    .readout--gear .readout__value { font-size: 44px; }
+    .btn { font-size: 13px; padding: 13px 8px; }
+}
